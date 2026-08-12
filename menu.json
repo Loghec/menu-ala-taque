@@ -1,104 +1,78 @@
 {
-  "negocio": "ala-taque",
+  "negocio": "Ala-taque",
   "eslogan": "Las mejores alitas y salsas de la ciudad",
+  "informacion": {
+    "telefono": "555-0000",
+    "horario": "13:00 - 22:00"
+  },
   "categorias": [
     {
-      "nombre": "Alitas (Orden de 6 pzs)",
-      "precio": 65,
+      "id": "c1",
+      "nombre": "Alitas",
       "items": [
         {
-          "nombre": "Ajo parmesano",
-          "descripcion": "Ajo y queso parmesano rallado",
+          "id": "i1",
+          "nombre": "Orden de 6 pzs",
+          "descripcion": "Crujientes alitas acompañadas de vegetales y aderezo Ranch.",
+          "precio": 65,
           "disponible": true,
-          "picor": 0
-        },
-        {
-          "nombre": "Lemon Pepper",
-          "descripcion": "Sazonadas al limón con pimienta negra",
-          "disponible": true,
-          "picor": 0
-        },
-        {
-          "nombre": "BBQ Tradicional",
-          "descripcion": "Salsa dulce ahumada",
-          "disponible": true,
-          "picor": 0
-        },
-        {
-          "nombre": "Bufalo",
-          "descripcion": "Bufalo clásico con un toque de picante",
-          "disponible": true,
-          "picor": 2
-        },
-        {
-          "nombre": "Valentina",
-          "descripcion": "Salsa picante de chile de árbol",
-          "disponible": true,
-          "picor": 3
-        },
-        {
-          "nombre": "Flamin' Hot",
-          "descripcion": "condimento sabor flamin' hot con un toque de picante",
-          "disponible": true,
-          "picor": 3
-        },
-        {
-          "nombre": "Takis azules",
-          "descripcion": "condimento sabor takis azules con un toque de picante",
-          "disponible": true,
-          "picor": 4
-        },        
-        {
-          "nombre": "Mango habanero",
-          "descripcion": "Para los amantes del picante extremo",
-          "disponible": true,
-          "picor": 5
+          "imagen_url": "url_de_la_imagen",
+          "opciones_titulo": "Elige tu salsa (1 opción):",
+          "opciones": [
+            { "nombre": "Ajo parmesano", "picor": 0 },
+            { "nombre": "Lemon Pepper", "picor": 0 },
+            { "nombre": "BBQ Tradicional", "picor": 0 },
+            { "nombre": "Bufalo", "picor": 2 },
+            { "nombre": "Valentina", "picor": 3 },
+            { "nombre": "Flamin' Hot", "picor": 3 },
+            { "nombre": "Takis azules", "picor": 4 },
+            { "nombre": "Mango habanero", "picor": 5 }
+          ]
         }
       ]
     },
     {
-      "nombre": "Papas a la francesa",
-      "precio": 45,
+      "id": "c2",
+      "nombre": "Snacks",
       "items": [
         {
-          "nombre": "Porción Clásica",
+          "id": "i2",
+          "nombre": "Papas a la francesa Clásicas",
           "descripcion": "Deliciosas papas crujientes",
+          "precio": 45,
           "disponible": true,
           "opciones_titulo": "Preparación disponible:",
           "opciones": [
-            "Lemon Pepper",
-            "Con Catsup, Mayonesa y Queso Amarillo"
+            { "nombre": "Lemon Pepper", "extra": 0 },
+            { "nombre": "Con Catsup, Mayonesa y Queso Amarillo", "extra": 5 }
+          ]
+        },
+        {
+          "id": "i3",
+          "nombre": "Salchipapas",
+          "descripcion": "Salchichas fritas sobre cama de papas",
+          "precio": 40,
+          "disponible": true,
+          "opciones_titulo": "Preparación disponible:",
+          "opciones": [
+            { "nombre": "Sencillas", "extra": 0 },
+            { "nombre": "Con Queso Amarillo", "extra": 5 }
           ]
         }
       ]
-    },{
-      "nombre": "Salchipapas",
-      "precio": 40,
-      "items": [       
-        {
-          "nombre": "salchipapas",
-          "descripcion": "salchichas con papas",
-          "precio": 40,
-          "disponible": true, 
-          "opciones": [
-            "Lemon Pepper",
-            "Con Catsup, Mayonesa y Queso Amarillo"
-          ] 
-        }
-      ]
-    }, 
+    },
     {
+      "id": "c3",
       "nombre": "Bebidas",
-      "precio": null,
-      "items": [       
+      "items": [
         {
-          "nombre": "Refresco 600ml",
-          "descripcion": "coca-cola",
+          "id": "i4",
+          "nombre": "Refresco Cola 600ml",
+          "descripcion": "Bien fría",
           "precio": 30,
           "disponible": true
         }
       ]
-    }, 
-    
+    }
   ]
 }
