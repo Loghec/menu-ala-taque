@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menú de Alitas</title>
+  <title>Menú - Ala-taque</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <header>
-    <h1 id="restaurant-name">Cargando...</h1>
-    <p id="restaurant-tagline"></p>
+
+  <header class="header-container">
+    <div class="header-text">
+      <h1 id="restaurant-name">Cargando...</h1>
+      <p id="restaurant-tagline"></p>
+    </div>
+    <img id="restaurant-logo" src="" alt="Logo" class="logo-img" style="display: none;">
   </header>
 
   <main id="menu-container"></main>
@@ -24,24 +30,37 @@
       return `<span class="picor-badge">${'🌶️'.repeat(nivel)}</span>`;
     }
 
-    fetch('menu.json')
+    fetch('menu.json?v=' + new Date().getTime())
       .then(response => response.json())
       .then(data => {
         document.getElementById('restaurant-name').textContent = data.negocio;
         document.getElementById('restaurant-tagline').textContent = data.eslogan;
 
+        const logoUrl = data.logo || 'logo.png';
+        const logoImg = document.getElementById('restaurant-logo');
+        logoImg.src = logoUrl;
+        logoImg.onload = () => { logoImg.style.display = 'block'; };
+
         const container = document.getElementById('menu-container');
 
-        data.categorias.forEach(cat => {
+        data.categorias.forEach((cat, index) => {
           const section = document.createElement('section');
           section.className = 'category';
 
-          // Título de categoría con precio general si aplica
           const catPriceHTML = cat.precio ? `<span class="cat-price">$${cat.precio}</span>` : '';
-          const catHeaderHTML = `<div class="category-header"><h2>${cat.nombre}</h2>${catPriceHTML}</div>`;
+
+          // Encabezado interactivo con indicador de flecha
+          const catHeaderHTML = `
+            <div class="category-header">
+              <h2>${cat.nombre}</h2>
+              <div class="header-right">
+                ${catPriceHTML}
+                <span class="accordion-icon">▼</span>
+              </div>
+            </div>
+          `;
 
           let itemsHTML = cat.items.map(item => {
-            // Opciones/preparaciones
             let opcionesHTML = '';
             if (item.opciones && item.opciones.length > 0) {
               const listaOpciones = item.opciones.map(op => `<li>${op}</li>`).join('');
@@ -53,7 +72,6 @@
               `;
             }
 
-            // Muestra precio del ítem individual solo si la categoría no tiene un precio fijo
             const itemPrice = item.precio !== undefined ? item.precio : cat.precio;
             const showItemPrice = !cat.precio && itemPrice !== undefined;
             const priceHTML = showItemPrice ? `<div class="item-price">$${itemPrice}</div>` : '';
@@ -74,11 +92,37 @@
             `;
           }).join('');
 
-          section.innerHTML = `${catHeaderHTML}${itemsHTML}`;
+          // Contenedor colapsable para los platillos
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'category-content';
+          contentDiv.innerHTML = itemsHTML;
+
+          section.innerHTML = catHeaderHTML;
+          section.appendChild(contentDiv);
+
+          // Abrir por defecto únicamente la primera categoría (Alitas)
+          if (index === 0) {
+            section.classList.add('active');
+          }
+
+          // Evento al hacer clic en el encabezado de la categoría
+          section.querySelector('.category-header').addEventListener('click', () => {
+            const isAlreadyActive = section.classList.contains('active');
+
+            // Cierra todas las demás categorías
+            document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+
+            // Si la categoría clickeada no estaba abierta, la abre
+            if (!isAlreadyActive) {
+              section.classList.add('active');
+            }
+          });
+
           container.appendChild(section);
         });
       })
       .catch(error => console.error('Error cargando el menú:', error));
   </script>
 </body>
+
 </html>
