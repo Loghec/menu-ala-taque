@@ -206,3 +206,146 @@ margin: 4px 0 0 0;
   flex-shrink: 0;
   margin-left: auto; /* EMPUJA EL LOGO AL EXTREMO DERECHO */
 }
+/* Contadores a la derecha */
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-qty {
+  background: var(--accent-color, #e63946);
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.qty-num {
+  font-weight: bold;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Modal Emergente */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.option-group {
+  margin: 15px 0;
+  text-align: left;
+}
+
+.checkbox-label, .radio-label {
+  display: block;
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
+
+.btn-confirm {
+  width: 100%;
+  background: #25d366;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Barra flotante de carrito */
+.cart-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #111;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+  z-index: 999;
+}
+
+.cart-bar.hidden {
+  display: none;
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+/* Corrección de colores para el Modal */
+.modal-content {
+  background: #ffffff;
+  color: #111111; /* Texto oscuro visible */
+}
+
+.modal-content h3 {
+  color: #e63946; /* Título en color rojo/naranja del negocio */
+  margin-top: 0;
+  font-size: 1.3rem;
+}
+
+.modal-content h4 {
+  color: #222222; /* Encabezados de salsas y aderezos */
+  margin: 12px 0 6px 0;
+  font-size: 1rem;
+}
+
+.checkbox-label, 
+.radio-label {
+  color: #333333 !important; /* Texto de cada salsa/aderezo */
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.close-btn {
+  color: #888888;
+}
+
+.close-btn:hover {
+  color: #000000;
+}
