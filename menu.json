@@ -71,7 +71,22 @@
           ]
         }
       ]
-    },
+    },{
+      "nombre": "Salchipapas",
+      "precio": 40,
+      "items": [       
+        {
+          "nombre": "salchipapas",
+          "descripcion": "salchichas con papas",
+          "precio": 40,
+          "disponible": true, 
+          "opciones": [
+            "Lemon Pepper",
+            "Con Catsup, Mayonesa y Queso Amarillo"
+          ] 
+        }
+      ]
+    }
     {
       "nombre": "Bebidas",
       "precio": null,
@@ -83,6 +98,7 @@
           "disponible": true
         }
       ]
-    }
+    }, 
+    
   ]
 }
