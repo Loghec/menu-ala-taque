@@ -29,6 +29,31 @@
     <button id="confirm-options-btn" class="btn-confirm" onclick="confirmarSeleccionGenerica()">Agregar al Pedido</button>
   </div>
 </div>
+<!-- Modal de Confirmación y Pago -->
+<div id="checkout-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeCheckoutModal()">&times;</span>
+    <h3>Detalles del Pago</h3>
+    
+    <div class="option-group">
+      <h4>¿Cómo vas a pagar?</h4>
+      <label class="radio-label">
+        <input type="radio" name="metodo_pago" value="Efectivo" checked onchange="togglePagoEfectivo(true)"> Efectivo 💵
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="metodo_pago" value="Transferencia / Tarjeta" onchange="togglePagoEfectivo(false)"> Transferencia / Tarjeta 💳
+      </label>
+    </div>
+
+    <div id="pago-efectivo-container" class="option-group">
+      <h4>¿Con cuánto vas a pagar?</h4>
+      <input type="number" id="monto-pago" placeholder="Ej. 200, 500" class="input-pago" oninput="calcularCambio()">
+      <div id="cambio-info" class="cambio-text"></div>
+    </div>
+
+    <button class="btn-confirm" onclick="enviarPedidoWhatsAppFinal()">Enviar por WhatsApp 💬</button>
+  </div>
+</div>
 
   <!-- Barra flotante inferior para realizar pedido -->
   <div id="cart-bar" class="cart-bar hidden">
@@ -44,6 +69,7 @@
   let whatsappNum = "";
   let tempItem = null;
   const menuItems = {};
+  let totalPedidoActual = 0;
 
   fetch('menu.json?v=' + new Date().getTime())
     .then(res => res.json())
@@ -257,23 +283,80 @@
   }
 
   function enviarPedidoWhatsApp() {
-    if (cart.length === 0) return;
+  if (cart.length === 0) return;
 
-    let msg = `*¡Hola! Quisiera realizar el siguiente pedido:*\n\n`;
-    let total = 0;
+  totalPedidoActual = cart.reduce((sum, i) => sum + (i.precio * i.qty), 0);
+  
+  // Limpia y abre el modal de checkout
+  document.getElementById('monto-pago').value = '';
+  document.getElementById('cambio-info').textContent = '';
+  document.getElementById('checkout-modal').style.display = 'flex';
+}
 
-    cart.forEach(item => {
-      const subtotal = item.precio * item.qty;
-      total += subtotal;
-      msg += `• *${item.qty}x ${item.nombre}* - $${subtotal}\n`;
-      if (item.detalles) msg += `  └ _${item.detalles}_\n`;
-    });
+function closeCheckoutModal() {
+  document.getElementById('checkout-modal').style.display = 'none';
+}
 
-    msg += `\n*Total a pagar: $${total}*`;
+function togglePagoEfectivo(esEfectivo) {
+  const container = document.getElementById('pago-efectivo-container');
+  container.style.display = esEfectivo ? 'block' : 'none';
+}
 
-    const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
+function calcularCambio() {
+  const montoInput = parseFloat(document.getElementById('monto-pago').value);
+  const cambioDiv = document.getElementById('cambio-info');
+
+  if (isNaN(montoInput) || montoInput <= 0) {
+    cambioDiv.textContent = '';
+    return;
   }
+
+  if (montoInput < totalPedidoActual) {
+    cambioDiv.style.color = '#e63946';
+    cambioDiv.textContent = `Faltan $${totalPedidoActual - montoInput} para cubrir el total ($${totalPedidoActual})`;
+  } else {
+    const cambio = montoInput - totalPedidoActual;
+    cambioDiv.style.color = '#2a9d8f';
+    cambioDiv.textContent = cambio === 0 ? 'Pago exacto' : `Cambio a llevar: $${cambio}`;
+  }
+}
+
+function enviarPedidoWhatsAppFinal() {
+  if (cart.length === 0) return;
+
+  const metodoPago = document.querySelector('input[name="metodo_pago"]:checked').value;
+  const montoPago = parseFloat(document.getElementById('monto-pago').value);
+
+  if (metodoPago === 'Efectivo' && !isNaN(montoPago) && montoPago < totalPedidoActual) {
+    alert(`El monto ingresado ($${montoPago}) es menor al total del pedido ($${totalPedidoActual}).`);
+    return;
+  }
+
+  let msg = `*¡Hola! Quisiera realizar el siguiente pedido:*\n\n`;
+
+  cart.forEach(item => {
+    const subtotal = item.precio * item.qty;
+    msg += `• *${item.qty}x ${item.nombre}* - $${subtotal}\n`;
+    if (item.detalles) msg += `  └ _${item.detalles}_\n`;
+  });
+
+  msg += `\n*Total a pagar:* $${totalPedidoActual}\n`;
+  msg += `*Método de pago:* ${metodoPago}\n`;
+
+  if (metodoPago === 'Efectivo') {
+    if (!isNaN(montoPago) && montoPago > 0) {
+      const cambio = montoPago - totalPedidoActual;
+      msg += `*Paga con:* $${montoPago}\n`;
+      msg += `*Cambio a llevar:* $${cambio}\n`;
+    } else {
+      msg += `*Paga con:* Pago exacto / Cambio por definir\n`;
+    }
+  }
+
+  const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(msg)}`;
+  closeCheckoutModal();
+  window.open(url, '_blank');
+}
 </script>
 </body>
 </html>
