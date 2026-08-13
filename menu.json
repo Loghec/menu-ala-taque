@@ -35,7 +35,7 @@
               "titulo": "Aderezo (Elige 1):",
               "tipo": "radio",
               "min": 1,
-              "opciones": ["Ranch", "Blue Cheese", "Chipotle Mayo", "Sin Aderezo"]
+              "opciones": ["Ranch", "Blue Cheese","Sin Aderezo"]
             }
           ]
         }
