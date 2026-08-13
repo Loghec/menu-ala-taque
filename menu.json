@@ -20,7 +20,16 @@
               "tipo": "checkbox",
               "max": 2,
               "min": 1,
-              "opciones": ["BBQ Tradicional", "Buffalo Habanero", "Lemon Pepper", "Mango Habanero", "Ajo Parmesano", "Flamin' Hot"]
+              "opciones": [
+                { "nombre": "Ajo Parmesano", "picor": 1 },
+                { "nombre": "Lemon Pepper", "picor": 1 },
+                { "nombre": "BBQ Tradicional", "picor": 1 },
+                { "nombre": "Búfalo", "picor": 3 },
+                { "nombre": "Valentina", "picor": 3 },
+                { "nombre": "Flamin' Hot", "picor": 3 },
+                { "nombre": "Takis Azules", "picor": 4 },
+                { "nombre": "Mango Habanero", "picor": 5 }
+              ]
             },
             {
               "titulo": "Aderezo (Elige 1):",
