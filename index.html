@@ -124,39 +124,47 @@
     }
   }
 
-  function openModalGenerico(item) {
-    document.getElementById('modal-title').textContent = item.nombre;
-    const body = document.getElementById('modal-options-body');
-    body.innerHTML = '';
+ function openModalGenerico(item) {
+  document.getElementById('modal-title').textContent = item.nombre;
+  const body = document.getElementById('modal-options-body');
+  body.innerHTML = '';
 
-    item.grupos_opciones.forEach((grupo, gIdx) => {
-      const groupDiv = document.createElement('div');
-      groupDiv.className = 'option-group';
+  item.grupos_opciones.forEach((grupo, gIdx) => {
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'option-group';
 
-      let html = `<h4>${grupo.titulo}</h4>`;
+    let html = `<h4>${grupo.titulo}</h4>`;
 
-      grupo.opciones.forEach(op => {
-        if (grupo.tipo === 'checkbox') {
-          html += `
-            <label class="checkbox-label">
-              <input type="checkbox" name="grupo_${gIdx}" value="${op}" onchange="limitCheckboxes('grupo_${gIdx}', ${grupo.max || 99})"> ${op}
-            </label>
-          `;
-        } else {
-          html += `
-            <label class="radio-label">
-              <input type="radio" name="grupo_${gIdx}" value="${op}"> ${op}
-            </label>
-          `;
-        }
-      });
+    grupo.opciones.forEach(op => {
+      // Verifica si la opción es un objeto con picor o un texto simple
+      const esObjeto = typeof op === 'object';
+      const nombreOp = esObjeto ? op.nombre : op;
+      const picorNum = esObjeto && op.picor ? op.picor : 0;
+      const picorEmoji = picorNum > 0 ? ` <span class="picor-badge">${'🌶️'.repeat(picorNum)}</span>` : '';
 
-      groupDiv.innerHTML = html;
-      body.appendChild(groupDiv);
+      if (grupo.tipo === 'checkbox') {
+        html += `
+          <label class="checkbox-label">
+            <input type="checkbox" name="grupo_${gIdx}" value="${nombreOp}" onchange="limitCheckboxes('grupo_${gIdx}', ${grupo.max || 99})"> 
+            ${nombreOp}${picorEmoji}
+          </label>
+        `;
+      } else {
+        html += `
+          <label class="radio-label">
+            <input type="radio" name="grupo_${gIdx}" value="${nombreOp}"> 
+            ${nombreOp}${picorEmoji}
+          </label>
+        `;
+      }
     });
 
-    document.getElementById('options-modal').style.display = 'flex';
-  }
+    groupDiv.innerHTML = html;
+    body.appendChild(groupDiv);
+  });
+
+  document.getElementById('options-modal').style.display = 'flex';
+}
 
   function closeModal() {
     document.getElementById('options-modal').style.display = 'none';
