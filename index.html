@@ -200,32 +200,43 @@
   }
 
   function confirmarSeleccionGenerica() {
-    if (!tempItem) return;
+  if (!tempItem) return;
 
-    let detallesArr = [];
-    let esValido = true;
+  let detallesArr = [];
+  let esValido = true;
 
-    tempItem.grupos_opciones.forEach((grupo, gIdx) => {
-      const seleccionados = Array.from(document.querySelectorAll(`input[name="grupo_${gIdx}"]:checked`)).map(el => el.value);
-      
-      const minRequerido = grupo.min || 0;
-      if (seleccionados.length < minRequerido) {
-        alert(`Por favor elige al menos ${minRequerido} opción en: "${grupo.titulo.replace(':', '')}"`);
-        esValido = false;
-        return;
-      }
+  tempItem.grupos_opciones.forEach((grupo, gIdx) => {
+    const grupoSpans = document.querySelectorAll(`span.opt-qty-num[data-group="${gIdx}"]`);
+    let seleccionados = [];
+    let totalPiezas = 0;
 
-      if (seleccionados.length > 0) {
-        detallesArr.push(seleccionados.join(', '));
+    grupoSpans.forEach(span => {
+      const qty = parseInt(span.textContent) || 0;
+      if (qty > 0) {
+        totalPiezas += qty;
+        const nombre = span.getAttribute('data-name');
+        seleccionados.push(qty > 1 ? `${qty}x ${nombre}` : nombre);
       }
     });
 
-    if (!esValido) return;
+    const minRequerido = grupo.min || 0;
+    if (totalPiezas < minRequerido) {
+      alert(`Por favor selecciona al menos ${minRequerido} opciones/piezas en: "${grupo.titulo.replace(':', '')}"`);
+      esValido = false;
+      return;
+    }
 
-    const detalles = detallesArr.join(' | ');
-    addToCart({ id: tempItem.id, nombre: tempItem.nombre, precio: tempItem.precioCalculado, detalles });
-    closeModal();
-  }
+    if (seleccionados.length > 0) {
+      detallesArr.push(seleccionados.join(', '));
+    }
+  });
+
+  if (!esValido) return;
+
+  const detalles = detallesArr.join(' | ');
+  addToCart({ id: tempItem.id, nombre: tempItem.nombre, precio: tempItem.precioCalculado, detalles });
+  closeModal();
+}
 
   function addToCart(product) {
     const existing = cart.find(i => i.id === product.id && i.detalles === product.detalles);
@@ -351,6 +362,25 @@ function enviarPedidoWhatsAppFinal() {
   const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(msg)}`;
   closeCheckoutModal();
   window.open(url, '_blank');
+}
+   function changeOptionQty(gIdx, opIdx, delta, maxGrupo) {
+  const span = document.getElementById(`opt-qty-${gIdx}-${opIdx}`);
+  let actual = parseInt(span.textContent) || 0;
+
+  // Calcular la suma total actual del grupo
+  const grupoSpans = document.querySelectorAll(`span.opt-qty-num[data-group="${gIdx}"]`);
+  let totalGrupo = 0;
+  grupoSpans.forEach(s => totalGrupo += parseInt(s.textContent) || 0);
+
+  if (delta > 0) {
+    if (totalGrupo >= maxGrupo) {
+      alert(`Solo puedes elegir un total de ${maxGrupo} piezas en esta sección.`);
+      return;
+    }
+    span.textContent = actual + 1;
+  } else if (delta < 0 && actual > 0) {
+    span.textContent = actual - 1;
+  }
 }
 </script>
 </body>
