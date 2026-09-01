@@ -3,6 +3,12 @@
   "eslogan": "Las mejores alitas y salsas.",
   "logo": "logo.jpeg",
   "whatsapp": "522821190061",
+  "datos_transferencia": {
+    "banco": "NOMBRE DEL BANCO",
+    "titular": "NOMBRE DEL TITULAR",
+    "cuenta": "0000000000",
+    "clabe": "000000000000000000"
+  },
   "categorias": [
     {
       "nombre": "Alitas (Orden de 6 pzs)",
@@ -12,6 +18,7 @@
           "id": "alitas-6",
           "nombre": "Orden de Alitas (6 pzs)",
           "descripcion": "Crujientes alitas con hasta 2 salsas y 1 aderezo.",
+          "imagen": "img/alitas.jpg",
           "disponible": true,
           "requiere_opciones": true,
           "grupos_opciones": [
@@ -49,6 +56,7 @@
           "id": "papas-1",
           "nombre": "Papas a la francesa",
           "descripcion": "Porción clásica crujiente",
+          "imagen": "img/papas.jpg",
           "precio": 45,
           "disponible": true,
           "requiere_opciones": true,
@@ -58,6 +66,7 @@
               "tipo": "checkbox",
               "max": 5,
               "min": 1,
+              "exclusivas": ["Naturales"],
               "opciones": [
                 "Naturales",
                 "Con Catsup",
@@ -78,6 +87,7 @@
           "id": "bebida-1",
           "nombre": "Refresco Cola 600ml",
           "descripcion": "Bien fría",
+          "imagen": "img/refresco.jpg",
           "precio": 30,
           "disponible": true
         }
