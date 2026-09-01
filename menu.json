@@ -1,13 +1,13 @@
 {
   "negocio": "Ala-taque",
-  "eslogan": "Las mejores alitas y salsas.",
+  "eslogan": "Las mejores alitas y snacks.",
   "logo": "logo.jpeg",
   "whatsapp": "522821190061",
   "datos_transferencia": {
-    "banco": "NOMBRE DEL BANCO",
-    "titular": "NOMBRE DEL TITULAR",
-    "cuenta": "0000000000",
-    "clabe": "000000000000000000"
+    "banco": "BANCO AZTECA",
+    "titular": "HECTOR LOPEZ",
+    "cuenta": "--",
+    "clabe": "--"
   },
   "categorias": [
     {
@@ -58,6 +58,56 @@
           "descripcion": "Porción clásica crujiente",
           "imagen": "img/papas.jpg",
           "precio": 45,
+          "disponible": true,
+          "requiere_opciones": true,
+          "grupos_opciones": [
+            {
+              "titulo": "Preparación / Complementos:",
+              "tipo": "checkbox",
+              "max": 5,
+              "min": 1,
+              "exclusivas": ["Naturales"],
+              "opciones": [
+                "Naturales",
+                "Con Catsup",
+                "Queso amarillo",
+                "Mayonesa",
+                "Lemon Pepper"
+              ]
+            }
+          ]
+        },
+                {
+          "id": "Salchipapas-1",
+          "nombre": "Salchipapas",
+          "descripcion": "papas a la francesa con salchicha y complementos",
+          "imagen": "img/papas.jpg",
+          "precio": 55,
+          "disponible": true,
+          "requiere_opciones": true,
+          "grupos_opciones": [
+            {
+              "titulo": "Preparación / Complementos:",
+              "tipo": "checkbox",
+              "max": 5,
+              "min": 1,
+              "exclusivas": ["Naturales"],
+              "opciones": [
+                "Naturales",
+                "Con Catsup",
+                "Queso amarillo",
+                "Mayonesa",
+                "Lemon Pepper"
+              ]
+            }
+          ]
+        },
+                {
+          "id": "salchipulpos-1",
+          "nombre": "salchipulpos",
+          "descripcion": "botana crujiente de salchichas en forma de pulpo con papas a la francesa y complementos",
+          "imagen": "img/papas.jpg",
+          "precio": 55,
           "disponible": true,
           "requiere_opciones": true,
           "grupos_opciones": [
