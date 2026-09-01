@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú - Ala-taque</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header-container">
+    <img id="restaurant-logo" src="" alt="Logo" class="logo-img" style="display: none;">
+    <div id="restaurant-logo-fallback" class="logo-fallback" style="display: none;"></div>
+    <div class="header-text">
+      <h1 id="restaurant-name">Cargando...</h1>
+      <p id="restaurant-tagline"></p>
+    </div>
+  </header>
+
+  <nav id="category-tabs" class="category-tabs"></nav>
+
+  <main id="menu-container"></main>
+
+  <!-- Modal para personalizar productos (Alitas, Papas, etc.) -->
+  <div id="options-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3 id="modal-title">Personaliza tu Orden</h3>
+
+      <!-- Este contenedor cargará dinámicamente cualquier opción -->
+      <div id="modal-options-body"></div>
+
+      <button id="confirm-options-btn" class="btn-confirm" onclick="confirmarSeleccionGenerica()">Agregar al Pedido</button>
+    </div>
+  </div>
+
+  <!-- Modal "Ver mi pedido": resumen antes de pagar -->
+  <div id="review-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeReviewModal()">&times;</span>
+      <h3>Mi Pedido</h3>
+
+      <div id="review-items-body"></div>
+
+      <div class="review-total-row">
+        <span>Total</span>
+        <span id="review-total-amount">$0</span>
+      </div>
+
+      <button id="review-continue-btn" class="btn-confirm" onclick="continuarAPago()">Continuar con el pago</button>
+      <button class="btn-secondary" onclick="closeReviewModal()">Seguir viendo el menú</button>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación y Pago -->
+  <div id="checkout-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeCheckoutModal()">&times;</span>
+      <h3>Detalles del Pago</h3>
+
+      <div class="option-group">
+        <h4>¿Cómo vas a pagar?</h4>
+        <label class="radio-label">
+          <input type="radio" name="metodo_pago" value="Efectivo" checked onchange="togglePagoEfectivo(true)"> Efectivo 💵
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="metodo_pago" value="Transferencia" onchange="togglePagoEfectivo(false)"> Transferencia 🏦
+        </label>
+      </div>
+
+      <div id="pago-efectivo-container" class="option-group">
+        <h4>¿Con cuánto vas a pagar?</h4>
+        <input type="number" id="monto-pago" placeholder="Ej. 200, 500" class="input-pago" oninput="calcularCambio()">
+        <div id="cambio-info" class="cambio-text"></div>
+      </div>
+
+      <div id="pago-transferencia-container" class="option-group" style="display:none;">
+        <h4>Datos para tu transferencia</h4>
+        <div id="datos-transferencia-body"></div>
+        <div class="cambio-text" style="color: var(--accent-gold);">Favor de enviar comprobante de pago 🧾</div>
+      </div>
+
+      <button class="btn-confirm" onclick="enviarPedidoWhatsAppFinal()">Enviar por WhatsApp 💬</button>
+    </div>
+  </div>
+
+  <!-- Barra flotante inferior para revisar y realizar el pedido -->
+  <div id="cart-bar" class="cart-bar hidden">
+    <div class="cart-info">
+      <span id="cart-count">0 ítems</span>
+      <strong id="cart-total">$0</strong>
+    </div>
+    <button class="btn-whatsapp" onclick="openReviewModal()">Ver mi pedido</button>
+  </div>
+
+  <script>
+    let cart = [];
+    let whatsappNum = "";
+    let datosTransferencia = null;
+    let tempItem = null;
+    let currentGrupoExclusivas = {};
+    const menuItems = {};
+    let totalPedidoActual = 0;
+
+    fetch('menuD.json?v=' + new Date().getTime())
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('restaurant-name').textContent = data.negocio;
+        document.getElementById('restaurant-tagline').textContent = data.eslogan;
+        whatsappNum = data.whatsapp || "";
+        datosTransferencia = data.datos_transferencia || null;
+
+        const logoImg = document.getElementById('restaurant-logo');
+        const logoFallback = document.getElementById('restaurant-logo-fallback');
+        if (data.logo) {
+          logoImg.src = data.logo;
+          logoImg.onload = () => { logoImg.style.display = 'block'; };
+          logoImg.onerror = () => { mostrarLogoFallback(data.negocio, logoFallback); };
+        } else {
+          mostrarLogoFallback(data.negocio, logoFallback);
+        }
+
+        const tabsNav = document.getElementById('category-tabs');
+        const container = document.getElementById('menu-container');
+
+        data.categorias.forEach((cat, index) => {
+          const catSlug = `cat-${index}`;
+
+          // Pestaña
+          const tabBtn = document.createElement('button');
+          tabBtn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+          tabBtn.textContent = cat.nombre;
+          tabBtn.dataset.target = catSlug;
+          tabBtn.addEventListener('click', () => switchCategory(catSlug));
+          tabsNav.appendChild(tabBtn);
+
+          // Sección de categoría
+          const section = document.createElement('section');
+          section.className = `category ${index === 0 ? 'active' : ''}`;
+          section.id = catSlug;
+
+          const catPriceNote = cat.precio ? `<div class="category-price-note">Precio: $${cat.precio}</div>` : '<div style="height:14px"></div>';
+          section.innerHTML = catPriceNote;
+
+          cat.items.forEach(item => {
+            item.precioCalculado = item.precio !== undefined ? item.precio : cat.precio;
+            menuItems[item.id] = item;
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = `item ${item.disponible ? '' : 'agotado'}`;
+
+            const inicial = item.nombre.trim().charAt(0).toUpperCase();
+            const thumbHtml = item.imagen
+              ? `<img class="item-thumb" src="${item.imagen}" alt="${item.nombre}" onerror="this.outerHTML='<div class=&quot;item-thumb-fallback&quot;>${inicial}</div>'">`
+              : `<div class="item-thumb-fallback">${inicial}</div>`;
+
+            itemDiv.innerHTML = `
+              ${thumbHtml}
+              <div class="item-info">
+                <h3>${item.nombre} ${item.disponible ? '' : '<span class="badge-agotado">(Agotado)</span>'}</h3>
+                <p>${item.descripcion}</p>
+                <div class="price">$${item.precioCalculado}</div>
+              </div>
+              <div class="item-controls">
+                ${item.disponible ? `
+                  <button class="btn-qty" onclick="changeQty('${item.id}', -1)">-</button>
+                  <span id="qty-${item.id}" class="qty-num">0</span>
+                  <button class="btn-qty" onclick="addOrConfigureItem('${item.id}')">+</button>
+                ` : ''}
+              </div>
+            `;
+            section.appendChild(itemDiv);
+          });
+
+          container.appendChild(section);
+        });
+      });
+
+    function mostrarLogoFallback(nombre, fallbackEl) {
+      fallbackEl.textContent = (nombre || '?').trim().charAt(0).toUpperCase();
+      fallbackEl.style.display = 'flex';
+    }
+
+    function switchCategory(slug) {
+      document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(slug).classList.add('active');
+      document.querySelector(`.tab-btn[data-target="${slug}"]`).classList.add('active');
+    }
+
+    function addOrConfigureItem(id) {
+      const item = menuItems[id];
+      if (!item) return;
+
+      if (item.requiere_opciones && item.grupos_opciones) {
+        tempItem = item;
+        openModalGenerico(item);
+      } else {
+        addToCart({ id: item.id, nombre: item.nombre, precio: item.precioCalculado, detalles: '' });
+      }
+    }
+
+    function openModalGenerico(item) {
+      document.getElementById('modal-title').textContent = item.nombre;
+      const body = document.getElementById('modal-options-body');
+      body.innerHTML = '';
+      currentGrupoExclusivas = {};
+
+      item.grupos_opciones.forEach((grupo, gIdx) => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'option-group';
+        currentGrupoExclusivas[`grupo_${gIdx}`] = grupo.exclusivas || [];
+
+        let html = `<h4>${grupo.titulo}</h4>`;
+
+        grupo.opciones.forEach(op => {
+          // Verifica si la opción es un objeto con picor o un texto simple
+          const esObjeto = typeof op === 'object';
+          const nombreOp = esObjeto ? op.nombre : op;
+          const picorNum = esObjeto && op.picor ? op.picor : 0;
+          const picorEmoji = picorNum > 0 ? ` <span class="picor-badge">${'🌶️'.repeat(picorNum)}</span>` : '';
+
+          if (grupo.tipo === 'checkbox') {
+            html += `
+              <label class="checkbox-label">
+                <input type="checkbox" name="grupo_${gIdx}" value="${nombreOp}" onchange="handleCheckboxChange(this, 'grupo_${gIdx}', ${grupo.max || 99})">
+                ${nombreOp}${picorEmoji}
+              </label>
+            `;
+          } else {
+            html += `
+              <label class="radio-label">
+                <input type="radio" name="grupo_${gIdx}" value="${nombreOp}">
+                ${nombreOp}${picorEmoji}
+              </label>
+            `;
+          }
+        });
+
+        groupDiv.innerHTML = html;
+        body.appendChild(groupDiv);
+      });
+
+      document.getElementById('options-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('options-modal').style.display = 'none';
+    }
+
+    function handleCheckboxChange(checkbox, name, max) {
+      const exclusivas = currentGrupoExclusivas[name] || [];
+      const allBoxes = Array.from(document.querySelectorAll(`input[name="${name}"]`));
+
+      if (exclusivas.length > 0) {
+        // Si se acaba de marcar una opción exclusiva, desmarca todas las demás
+        if (checkbox.checked && exclusivas.includes(checkbox.value)) {
+          allBoxes.forEach(b => { if (b !== checkbox) b.checked = false; });
+        }
+
+        // Bloquea las opciones exclusivas si hay otra opción marcada, y viceversa
+        const hayExclusivaMarcada = allBoxes.some(b => exclusivas.includes(b.value) && b.checked);
+        const hayNormalMarcada = allBoxes.some(b => !exclusivas.includes(b.value) && b.checked);
+
+        allBoxes.forEach(b => {
+          if (exclusivas.includes(b.value)) {
+            b.disabled = hayNormalMarcada;
+          } else {
+            b.disabled = hayExclusivaMarcada;
+          }
+        });
+      }
+
+      const checkedCount = document.querySelectorAll(`input[name="${name}"]:checked`).length;
+      if (checkedCount > max) {
+        checkbox.checked = false;
+        alert(`Solo puedes seleccionar hasta ${max} opciones.`);
+      }
+    }
+
+    function confirmarSeleccionGenerica() {
+      if (!tempItem) return;
+
+      let detallesArr = [];
+      let esValido = true;
+
+      tempItem.grupos_opciones.forEach((grupo, gIdx) => {
+        const seleccionados = Array.from(document.querySelectorAll(`input[name="grupo_${gIdx}"]:checked`)).map(el => el.value);
+
+        const minRequerido = grupo.min || 0;
+        if (seleccionados.length < minRequerido) {
+          alert(`Por favor elige al menos ${minRequerido} opción en: "${grupo.titulo.replace(':', '')}"`);
+          esValido = false;
+          return;
+        }
+
+        if (seleccionados.length > 0) {
+          detallesArr.push(seleccionados.join(', '));
+        }
+      });
+
+      if (!esValido) return;
+
+      const detalles = detallesArr.join(' | ');
+      addToCart({ id: tempItem.id, nombre: tempItem.nombre, precio: tempItem.precioCalculado, detalles });
+      closeModal();
+    }
+
+    function addToCart(product) {
+      const existing = cart.find(i => i.id === product.id && i.detalles === product.detalles);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      updateUI();
+    }
+
+    function changeQty(id, delta) {
+      let lastIndex = -1;
+      for (let i = cart.length - 1; i >= 0; i--) {
+        if (cart[i].id === id) {
+          lastIndex = i;
+          break;
+        }
+      }
+
+      if (lastIndex !== -1) {
+        cart[lastIndex].qty += delta;
+        if (cart[lastIndex].qty <= 0) {
+          cart.splice(lastIndex, 1);
+        }
+        updateUI();
+      }
+    }
+
+    function changeQtyByIndex(index, delta) {
+      if (!cart[index]) return;
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      updateUI();
+      renderReviewItems();
+    }
+
+    function updateUI() {
+      const counts = {};
+      cart.forEach(i => counts[i.id] = (counts[i.id] || 0) + i.qty);
+
+      document.querySelectorAll('.qty-num').forEach(span => {
+        const id = span.id.replace('qty-', '');
+        span.textContent = counts[id] || 0;
+      });
+
+      const totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+      const totalPrice = cart.reduce((sum, i) => sum + (i.precio * i.qty), 0);
+
+      const cartBar = document.getElementById('cart-bar');
+      if (totalCount > 0) {
+        cartBar.classList.remove('hidden');
+        document.getElementById('cart-count').textContent = `${totalCount} ítem(s)`;
+        document.getElementById('cart-total').textContent = `$${totalPrice}`;
+      } else {
+        cartBar.classList.add('hidden');
+        closeReviewModal();
+      }
+    }
+
+    function openReviewModal() {
+      if (cart.length === 0) return;
+      renderReviewItems();
+      document.getElementById('review-modal').style.display = 'flex';
+    }
+
+    function closeReviewModal() {
+      document.getElementById('review-modal').style.display = 'none';
+    }
+
+    function renderReviewItems() {
+      const body = document.getElementById('review-items-body');
+      const totalAmountEl = document.getElementById('review-total-amount');
+      const continueBtn = document.getElementById('review-continue-btn');
+
+      if (cart.length === 0) {
+        body.innerHTML = '<div class="empty-cart-msg">Tu pedido está vacío.</div>';
+        totalAmountEl.textContent = '$0';
+        continueBtn.style.display = 'none';
+        return;
+      }
+
+      continueBtn.style.display = 'block';
+      body.innerHTML = '';
+
+      cart.forEach((item, index) => {
+        const subtotal = item.precio * item.qty;
+        const row = document.createElement('div');
+        row.className = 'review-item';
+        row.innerHTML = `
+          <div>
+            <div class="review-item-name">${item.nombre}</div>
+            ${item.detalles ? `<div class="review-item-detalles">${item.detalles}</div>` : ''}
+            <div class="review-item-price">$${subtotal}</div>
+          </div>
+          <div class="review-item-controls">
+            <button class="btn-qty" onclick="changeQtyByIndex(${index}, -1)">-</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="btn-qty" onclick="changeQtyByIndex(${index}, 1)">+</button>
+          </div>
+        `;
+        body.appendChild(row);
+      });
+
+      const total = cart.reduce((sum, i) => sum + (i.precio * i.qty), 0);
+      totalAmountEl.textContent = `$${total}`;
+    }
+
+    function continuarAPago() {
+      if (cart.length === 0) return;
+      closeReviewModal();
+      abrirCheckout();
+    }
+
+    function abrirCheckout() {
+      totalPedidoActual = cart.reduce((sum, i) => sum + (i.precio * i.qty), 0);
+
+      document.getElementById('monto-pago').value = '';
+      document.getElementById('cambio-info').textContent = '';
+      document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').style.display = 'none';
+    }
+
+    function togglePagoEfectivo(esEfectivo) {
+      document.getElementById('pago-efectivo-container').style.display = esEfectivo ? 'block' : 'none';
+      document.getElementById('pago-transferencia-container').style.display = esEfectivo ? 'none' : 'block';
+      if (!esEfectivo) {
+        renderDatosTransferencia();
+      }
+    }
+
+    function renderDatosTransferencia() {
+      const body = document.getElementById('datos-transferencia-body');
+      if (!datosTransferencia) {
+        body.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.85rem;">Contáctanos por WhatsApp para obtener los datos de transferencia.</p>';
+        return;
+      }
+      body.innerHTML = `
+        <p style="margin: 4px 0; font-size: 0.9rem;"><strong>Banco:</strong> ${datosTransferencia.banco || ''}</p>
+        <p style="margin: 4px 0; font-size: 0.9rem;"><strong>Titular:</strong> ${datosTransferencia.titular || ''}</p>
+        <p style="margin: 4px 0; font-size: 0.9rem;"><strong>Cuenta:</strong> ${datosTransferencia.cuenta || ''}</p>
+        <p style="margin: 4px 0; font-size: 0.9rem;"><strong>CLABE:</strong> ${datosTransferencia.clabe || ''}</p>
+      `;
+    }
+
+    function calcularCambio() {
+      const montoInput = parseFloat(document.getElementById('monto-pago').value);
+      const cambioDiv = document.getElementById('cambio-info');
+
+      if (isNaN(montoInput) || montoInput <= 0) {
+        cambioDiv.textContent = '';
+        return;
+      }
+
+      if (montoInput < totalPedidoActual) {
+        cambioDiv.style.color = '#e63946';
+        cambioDiv.textContent = `Faltan $${totalPedidoActual - montoInput} para cubrir el total ($${totalPedidoActual})`;
+      } else {
+        const cambio = montoInput - totalPedidoActual;
+        cambioDiv.style.color = '#2a9d8f';
+        cambioDiv.textContent = cambio === 0 ? 'Pago exacto' : `Cambio a llevar: $${cambio}`;
+      }
+    }
+
+    function enviarPedidoWhatsAppFinal() {
+      if (cart.length === 0) return;
+
+      const metodoPago = document.querySelector('input[name="metodo_pago"]:checked').value;
+      const montoPago = parseFloat(document.getElementById('monto-pago').value);
+
+      if (metodoPago === 'Efectivo' && !isNaN(montoPago) && montoPago < totalPedidoActual) {
+        alert(`El monto ingresado ($${montoPago}) es menor al total del pedido ($${totalPedidoActual}).`);
+        return;
+      }
+
+      let msg = `*¡Hola! Quisiera realizar el siguiente pedido:*\n\n`;
+
+      cart.forEach(item => {
+        const subtotal = item.precio * item.qty;
+        msg += `• *${item.qty}x ${item.nombre}* - $${subtotal}\n`;
+        if (item.detalles) msg += `  └ _${item.detalles}_\n`;
+      });
+
+      msg += `\n*Total a pagar:* $${totalPedidoActual}\n`;
+      msg += `*Método de pago:* ${metodoPago}\n`;
+
+      if (metodoPago === 'Efectivo') {
+        if (!isNaN(montoPago) && montoPago > 0) {
+          const cambio = montoPago - totalPedidoActual;
+          msg += `*Paga con:* $${montoPago}\n`;
+          msg += `*Cambio a llevar:* $${cambio}\n`;
+        } else {
+          msg += `*Paga con:* Pago exacto / Cambio por definir\n`;
+        }
+      } else if (metodoPago === 'Transferencia' && datosTransferencia) {
+        msg += `\n*Datos para transferencia:*\n`;
+        msg += `Banco: ${datosTransferencia.banco || ''}\n`;
+        msg += `Titular: ${datosTransferencia.titular || ''}\n`;
+        msg += `Cuenta: ${datosTransferencia.cuenta || ''}\n`;
+        msg += `CLABE: ${datosTransferencia.clabe || ''}\n`;
+        msg += `\n*Favor de enviar comprobante de pago* 🧾\n`;
+      }
+
+      const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(msg)}`;
+      closeCheckoutModal();
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>

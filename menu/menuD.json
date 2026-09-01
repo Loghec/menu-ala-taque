@@ -1,0 +1,147 @@
+{
+  "negocio": "Ala-taque",
+  "eslogan": "Las mejores alitas y snacks.",
+  "logo": "logo.jpeg",
+  "whatsapp": "522821190061",
+  "datos_transferencia": {
+    "banco": "BANCO AZTECA",
+    "titular": "HECTOR LOPEZ",
+    "cuenta": "--",
+    "clabe": "--"
+  },
+  "categorias": [
+    {
+      "nombre": "Alitas (Orden de 6 pzs)",
+      "precio": 65,
+      "items": [
+        {
+          "id": "alitas-6",
+          "nombre": "Orden de Alitas (6 pzs)",
+          "descripcion": "Crujientes alitas con hasta 2 salsas y 1 aderezo.",
+          "imagen": "img/alitas.jpg",
+          "disponible": true,
+          "requiere_opciones": true,
+          "grupos_opciones": [
+            {
+              "titulo": "Salsas (Elige hasta 2):",
+              "tipo": "checkbox",
+              "max": 2,
+              "min": 1,
+              "opciones": [
+                { "nombre": "Ajo Parmesano", "picor": 1 },
+                { "nombre": "Lemon Pepper", "picor": 1 },
+                { "nombre": "BBQ Tradicional", "picor": 1 },
+                { "nombre": "Búfalo", "picor": 3 },
+                { "nombre": "Valentina", "picor": 3 },
+                { "nombre": "Flamin' Hot", "picor": 3 },
+                { "nombre": "Takis Azules", "picor": 4 },
+                { "nombre": "Mango Habanero", "picor": 5 }
+              ]
+            },
+            {
+              "titulo": "Aderezo (Elige 1):",
+              "tipo": "radio",
+              "min": 1,
+              "opciones": ["Ranch", "Blue Cheese","Sin Aderezo"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Snacks",
+      "precio": null,
+      "items": [
+        {
+          "id": "papas-1",
+          "nombre": "Papas a la francesa",
+          "descripcion": "Porción clásica crujiente",
+          "imagen": "img/papas.jpg",
+          "precio": 45,
+          "disponible": true,
+          "requiere_opciones": true,
+          "grupos_opciones": [
+            {
+              "titulo": "Preparación / Complementos:",
+              "tipo": "checkbox",
+              "max": 5,
+              "min": 1,
+              "exclusivas": ["Naturales"],
+              "opciones": [
+                "Naturales",
+                "Con Catsup",
+                "Queso amarillo",
+                "Mayonesa",
+                "Lemon Pepper"
+              ]
+            }
+          ]
+        },
+                {
+          "id": "Salchipapas-1",
+          "nombre": "Salchipapas",
+          "descripcion": "papas a la francesa con salchicha y complementos",
+          "imagen": "img/papas.jpg",
+          "precio": 55,
+          "disponible": true,
+          "requiere_opciones": true,
+          "grupos_opciones": [
+            {
+              "titulo": "Preparación / Complementos:",
+              "tipo": "checkbox",
+              "max": 5,
+              "min": 1,
+              "exclusivas": ["Naturales"],
+              "opciones": [
+                "Naturales",
+                "Con Catsup",
+                "Queso amarillo",
+                "Mayonesa",
+                "Lemon Pepper"
+              ]
+            }
+          ]
+        },
+                {
+          "id": "salchipulpos-1",
+          "nombre": "salchipulpos",
+          "descripcion": "botana crujiente de salchichas en forma de pulpo con papas a la francesa y complementos",
+          "imagen": "img/papas.jpg",
+          "precio": 55,
+          "disponible": true,
+          "requiere_opciones": true,
+          "grupos_opciones": [
+            {
+              "titulo": "Preparación / Complementos:",
+              "tipo": "checkbox",
+              "max": 5,
+              "min": 1,
+              "exclusivas": ["Naturales"],
+              "opciones": [
+                "Naturales",
+                "Con Catsup",
+                "Queso amarillo",
+                "Mayonesa",
+                "Lemon Pepper"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Bebidas",
+      "precio": null,
+      "items": [
+        {
+          "id": "bebida-1",
+          "nombre": "Refresco Cola 600ml",
+          "descripcion": "Bien fría",
+          "imagen": "img/refresco.jpg",
+          "precio": 30,
+          "disponible": true
+        }
+      ]
+    }
+  ]
+}
