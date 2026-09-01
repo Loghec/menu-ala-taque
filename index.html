@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menú - Ala-taque</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
   <header class="header-container">
     <img id="restaurant-logo" src="" alt="Logo" class="logo-img" style="display: none;">
@@ -31,8 +29,7 @@
       <!-- Este contenedor cargará dinámicamente cualquier opción -->
       <div id="modal-options-body"></div>
 
-      <button id="confirm-options-btn" class="btn-confirm" onclick="confirmarSeleccionGenerica()">Agregar al
-        Pedido</button>
+      <button id="confirm-options-btn" class="btn-confirm" onclick="confirmarSeleccionGenerica()">Agregar al Pedido</button>
     </div>
   </div>
 
@@ -63,12 +60,10 @@
       <div class="option-group">
         <h4>¿Cómo vas a pagar?</h4>
         <label class="radio-label">
-          <input type="radio" name="metodo_pago" value="Efectivo" checked onchange="togglePagoEfectivo(true)"> Efectivo
-          💵
+          <input type="radio" name="metodo_pago" value="Efectivo" checked onchange="togglePagoEfectivo(true)"> Efectivo 💵
         </label>
         <label class="radio-label">
-          <input type="radio" name="metodo_pago" value="Transferencia" onchange="togglePagoEfectivo(false)">
-          Transferencia 🏦
+          <input type="radio" name="metodo_pago" value="Transferencia" onchange="togglePagoEfectivo(false)"> Transferencia 🏦
         </label>
       </div>
 
@@ -99,8 +94,8 @@
 
   <script>
     window.MENU_JSON_PATH = 'menu.json';
+    window.SUCURSAL = 'principal';
   </script>
   <script src="main.js"></script>
 </body>
-
 </html>
