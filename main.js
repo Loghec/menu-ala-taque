@@ -12,6 +12,7 @@ const menuItems = {};
 let totalPedidoActual = 0;
 
 const MENU_JSON_PATH = window.MENU_JSON_PATH || 'menu.json';
+const SUCURSAL = window.SUCURSAL || 'principal';
 
 fetch(MENU_JSON_PATH + '?v=' + new Date().getTime())
   .then(res => res.json())
@@ -50,11 +51,16 @@ fetch(MENU_JSON_PATH + '?v=' + new Date().getTime())
       section.className = `category ${index === 0 ? 'active' : ''}`;
       section.id = catSlug;
 
-      const catPriceNote = cat.precio ? `<div class="category-price-note">Precio: $${cat.precio}</div>` : '<div style="height:14px"></div>';
+      // El precio de categoría puede variar por sucursal (ej. alitas)
+      const catPrecio = cat.precio_por_sucursal
+        ? cat.precio_por_sucursal[SUCURSAL]
+        : cat.precio;
+
+      const catPriceNote = catPrecio ? `<div class="category-price-note">Precio: $${catPrecio}</div>` : '<div style="height:14px"></div>';
       section.innerHTML = catPriceNote;
 
       cat.items.forEach(item => {
-        item.precioCalculado = item.precio !== undefined ? item.precio : cat.precio;
+        item.precioCalculado = item.precio !== undefined ? item.precio : catPrecio;
         menuItems[item.id] = item;
 
         const itemDiv = document.createElement('div');
