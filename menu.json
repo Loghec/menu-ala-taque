@@ -12,7 +12,10 @@
   "categorias": [
     {
       "nombre": "Alitas (Orden de 6 pzs)",
-      "precio": 65,
+      "precio_por_sucursal": {
+        "principal": 65,
+        "sucursal2": 75
+      },
       "items": [
         {
           "id": "alitas-6",
@@ -77,7 +80,7 @@
             }
           ]
         },
-                {
+        {
           "id": "Salchipapas-1",
           "nombre": "Salchipapas",
           "descripcion": "papas a la francesa con salchicha y complementos",
@@ -102,7 +105,7 @@
             }
           ]
         },
-                {
+        {
           "id": "salchipulpos-1",
           "nombre": "salchipulpos",
           "descripcion": "botana crujiente de salchichas en forma de pulpo con papas a la francesa y complementos",
