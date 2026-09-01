@@ -1,701 +1,417 @@
+/* Variables de color estilo interfaz oscura */
 :root {
-  --bg-color: #121212;
-  --card-bg: #1e1e1e;
-  --accent-color: #ff5722;
-  /* Color llamativo para las alitas */
-  --text-color: #f5f5f5;
-  --text-muted: #aaa;
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-modal: #1e293b;
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --accent-gold: #f59e0b;
+  --accent-green: #22c55e;
+  --accent-green-hover: #16a34a;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
   margin: 0;
-  padding: 15px;
+  padding: 0 0 110px 0; /* Espacio para no tapar contenido con el carrito */
 }
 
-header {
-  text-align: center;
-  padding: 20px 0;
-  border-bottom: 2px solid var(--accent-color);
-}
-
-h1 {
-  margin: 0;
-  color: var(--accent-color);
-  font-size: 1.8rem;
-}
-
-header p {
-  margin: 5px 0 0;
-  color: var(--text-muted);
-}
-
-.category h2 {
-  color: var(--accent-color);
-  border-bottom: 1px solid #333;
-  padding-bottom: 5px;
-  margin-top: 25px;
-}
-
-.item {
-  background: var(--card-bg);
-  border-radius: 8px;
-  padding: 12px 15px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.item-info h3 {
-  margin: 0 0 5px 0;
-  font-size: 1rem;
-}
-
-.item-info p {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.item-price {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: var(--accent-color);
-  margin-left: 10px;
-}
-
-.agotado {
-  opacity: 0.5;
-}
-
-.badge-agotado {
-  color: #ff5252;
-  font-size: 0.75rem;
-}
-
-footer {
-  text-align: center;
-  margin-top: 30px;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-}
-
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--accent-color);
-  margin-top: 25px;
-  margin-bottom: 15px;
-}
-
-.category-header h2 {
-  border-bottom: none;
-  margin: 0;
-  padding-bottom: 5px;
-}
-
-.cat-price {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: var(--accent-color);
-}
-
-.logo-img {
-  max-width: 130px;
-  height: auto;
-  margin: 0 auto 12px auto;
-  display: block;
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.header-info {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 6px;
-}
-
-.extra-price {
-  color: var(--accent-color);
-  font-weight: bold;
-}
-
-/* Estilos para el Acordeón */
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--accent-color);
-  margin-top: 15px;
-  padding: 10px 5px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.category-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.header-right {
+/* Header */
+.header-container {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 20px 16px 12px 16px;
+  background-color: var(--bg-main);
 }
 
-.accordion-icon {
-  font-size: 0.8rem;
-  color: var(--accent-color);
-  transition: transform 0.3s ease;
+.logo-img,
+.logo-fallback {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
-/* Ocultar el contenido por defecto */
-.category-content {
-  display: none;
-  padding-top: 10px;
-}
-
-/* Estado activo: Mostrar contenido y rotar la flecha */
-.category.active .category-content {
-  display: block;
-}
-
-.category.active .accordion-icon {
-  transform: rotate(180deg);
-}
-
-/* Contenedor flexible para alinear texto a la izquierda y logo a la derecha */
-.header-container {
+.logo-fallback {
+  background-color: var(--accent-gold);
+  color: #0f172a;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 0 20px 0;
-  border-bottom: 2px solid var(--accent-color);
-}
-
-.header-text {
-  text-align: left;
-  flex: 1;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.3rem;
 }
 
 .header-text h1 {
   margin: 0;
-  color: var(--accent-color);
-  font-size: 1.6rem;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
 .header-text p {
-margin: 4px 0 0 0;
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  margin: 2px 0 0 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
 }
 
-/* Estilo del logotipo ajustado para la esquina superior derecha */
-.logo-img {
- width: 65px;
-  height: 65px;
-  object-fit: cover;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  flex-shrink: 0;
-  margin-left: auto; /* EMPUJA EL LOGO AL EXTREMO DERECHO */
-}
-/* Contadores a la derecha */
-.item {
+/* Pestañas de categorías */
+.category-tabs {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  gap: 22px;
+  overflow-x: auto;
+  padding: 4px 16px 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  scrollbar-width: none;
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-main);
+  z-index: 10;
 }
 
-.item-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-qty {
-  background: var(--accent-color, #e63946);
-  color: white;
-  border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  font-weight: bold;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.qty-num {
-  font-weight: bold;
-  min-width: 18px;
-  text-align: center;
-}
-
-/* Modal Emergente */
-.modal {
+.category-tabs::-webkit-scrollbar {
   display: none;
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
 }
 
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  position: relative;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px; right: 15px;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.option-group {
-  margin: 15px 0;
-  text-align: left;
-}
-
-.checkbox-label, .radio-label {
-  display: block;
-  margin: 6px 0;
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
   font-size: 0.95rem;
-}
-
-.btn-confirm {
-  width: 100%;
-  background: #25d366;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: bold;
+  font-weight: 600;
+  padding: 4px 0;
+  white-space: nowrap;
   cursor: pointer;
+  border-bottom: 2px solid transparent;
 }
 
-/* Barra flotante de carrito */
-.cart-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: #111;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-  z-index: 999;
+.tab-btn.active {
+  color: var(--accent-gold);
+  border-bottom: 2px solid var(--accent-gold);
 }
 
-.cart-bar.hidden {
+/* Categorías */
+#menu-container {
+  padding: 4px 16px 0 16px;
+}
+
+.category {
   display: none;
 }
 
-.btn-whatsapp {
-  background: #25d366;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-}
-/* Corrección de colores para el Modal */
-.modal-content {
-  background: #ffffff;
-  color: #111111; /* Texto oscuro visible */
-}
-
-.modal-content h3 {
-  color: #e63946; /* Título en color rojo/naranja del negocio */
-  margin-top: 0;
-  font-size: 1.3rem;
-}
-
-.modal-content h4 {
-  color: #222222; /* Encabezados de salsas y aderezos */
-  margin: 12px 0 6px 0;
-  font-size: 1rem;
-}
-
-.checkbox-label, 
-.radio-label {
-  color: #333333 !important; /* Texto de cada salsa/aderezo */
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.close-btn {
-  color: #888888;
-}
-
-.close-btn:hover {
-  color: #000000;
-}:root {
-  --bg-color: #121212;
-  --card-bg: #1e1e1e;
-  --accent-color: #ff5722;
-  /* Color llamativo para las alitas */
-  --text-color: #f5f5f5;
-  --text-muted: #aaa;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  margin: 0;
-  padding: 15px;
-}
-
-header {
-  text-align: center;
-  padding: 20px 0;
-  border-bottom: 2px solid var(--accent-color);
-}
-
-h1 {
-  margin: 0;
-  color: var(--accent-color);
-  font-size: 1.8rem;
-}
-
-header p {
-  margin: 5px 0 0;
-  color: var(--text-muted);
-}
-
-.category h2 {
-  color: var(--accent-color);
-  border-bottom: 1px solid #333;
-  padding-bottom: 5px;
-  margin-top: 25px;
-}
-
-.item {
-  background: var(--card-bg);
-  border-radius: 8px;
-  padding: 12px 15px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.item-info h3 {
-  margin: 0 0 5px 0;
-  font-size: 1rem;
-}
-
-.item-info p {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.item-price {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: var(--accent-color);
-  margin-left: 10px;
-}
-
-.agotado {
-  opacity: 0.5;
-}
-
-.badge-agotado {
-  color: #ff5252;
-  font-size: 0.75rem;
-}
-
-footer {
-  text-align: center;
-  margin-top: 30px;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-}
-
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--accent-color);
-  margin-top: 25px;
-  margin-bottom: 15px;
-}
-
-.category-header h2 {
-  border-bottom: none;
-  margin: 0;
-  padding-bottom: 5px;
-}
-
-.cat-price {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: var(--accent-color);
-}
-
-.logo-img {
-  max-width: 130px;
-  height: auto;
-  margin: 0 auto 12px auto;
+.category.active {
   display: block;
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.header-info {
+.category-price-note {
+  color: var(--accent-gold);
+  font-weight: 700;
   font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 6px;
+  margin: 14px 0 10px 0;
 }
 
-.extra-price {
-  color: var(--accent-color);
-  font-weight: bold;
-}
-
-/* Estilos para el Acordeón */
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--accent-color);
-  margin-top: 15px;
-  padding: 10px 5px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.category-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.header-right {
+/* Items del Menú */
+.item {
   display: flex;
   align-items: center;
   gap: 12px;
+  background-color: var(--bg-card);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
 }
 
-.accordion-icon {
-  font-size: 0.8rem;
-  color: var(--accent-color);
-  transition: transform 0.3s ease;
+.item.agotado {
+  opacity: 0.5;
 }
 
-/* Ocultar el contenido por defecto */
-.category-content {
-  display: none;
-  padding-top: 10px;
-}
-
-/* Estado activo: Mostrar contenido y rotar la flecha */
-.category.active .category-content {
-  display: block;
-}
-
-.category.active .accordion-icon {
-  transform: rotate(180deg);
-}
-
-/* Contenedor flexible para alinear texto a la izquierda y logo a la derecha */
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 0 20px 0;
-  border-bottom: 2px solid var(--accent-color);
-}
-
-.header-text {
-  text-align: left;
-  flex: 1;
-}
-
-.header-text h1 {
-  margin: 0;
-  color: var(--accent-color);
-  font-size: 1.6rem;
-}
-
-.header-text p {
-margin: 4px 0 0 0;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Estilo del logotipo ajustado para la esquina superior derecha */
-.logo-img {
- width: 65px;
-  height: 65px;
+.item-thumb,
+.item-thumb-fallback {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
   object-fit: cover;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
   flex-shrink: 0;
-  margin-left: auto; /* EMPUJA EL LOGO AL EXTREMO DERECHO */
-}
-/* Contadores a la derecha */
-.item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
 }
 
+.item-thumb-fallback {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+}
+
+.badge-agotado {
+  color: #ef4444;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.item-info p {
+  margin: 0 0 6px 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.price {
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Controles de Cantidad (+/-) */
 .item-controls {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .btn-qty {
-  background: var(--accent-color, #e63946);
+  background-color: var(--accent-green);
   color: white;
   border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   font-weight: bold;
   font-size: 1.1rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .qty-num {
-  font-weight: bold;
-  min-width: 18px;
+  font-weight: 700;
+  min-width: 16px;
   text-align: center;
 }
 
-/* Modal Emergente */
+/* Modales (Opciones, Pedido y Checkout) */
 .modal {
   display: none;
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  padding: 16px;
 }
 
 .modal-content {
-  background: white;
+  background-color: var(--bg-modal);
+  color: var(--text-primary);
   padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  position: relative;
-  max-height: 80vh;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 450px;
+  max-height: 85vh;
   overflow-y: auto;
+  position: relative;
 }
 
 .close-btn {
   position: absolute;
-  top: 10px; right: 15px;
+  top: 12px;
+  right: 16px;
   font-size: 1.5rem;
   cursor: pointer;
+  color: var(--text-secondary);
 }
 
 .option-group {
-  margin: 15px 0;
+  margin-bottom: 16px;
   text-align: left;
 }
 
-.checkbox-label, .radio-label {
-  display: block;
-  margin: 6px 0;
+.option-group h4 {
+  margin: 0 0 8px 0;
   font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.radio-label, .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label:has(input:disabled) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.input-pago {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.cambio-text {
+  margin-top: 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .btn-confirm {
   width: 100%;
-  background: #25d366;
-  color: white;
+  background-color: var(--accent-green);
+  color: #fff;
   border: none;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
+  margin-top: 10px;
 }
 
-/* Barra flotante de carrito */
-.cart-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: #111;
-  color: white;
+.btn-secondary {
+  width: 100%;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Resumen del pedido (modal "Ver mi pedido") */
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.review-item-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.review-item-detalles {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.review-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.review-item-price {
+  color: var(--accent-gold);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.review-total-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+  padding-top: 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.empty-cart-msg {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Barra Flotante Inferior */
+.cart-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 10px 10px 10px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
 
 .cart-bar.hidden {
-  display: none;
+  display: none !important;
+}
+
+.cart-info {
+  display: flex;
+  flex-direction: column;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+#cart-count {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+#cart-total {
+  font-weight: 800;
+  font-size: 1.05rem;
 }
 
 .btn-whatsapp {
-  background: #25d366;
-  color: white;
+  background-color: var(--accent-green);
   border: none;
-  padding: 10px 16px;
-  border-radius: 20px;
-  font-weight: bold;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 12px 18px;
+  border-radius: 10px;
   cursor: pointer;
-}
-/* Corrección de colores para el Modal */
-.modal-content {
-  background: #ffffff;
-  color: #111111; /* Texto oscuro visible */
-}
-
-.modal-content h3 {
-  color: #e63946; /* Título en color rojo/naranja del negocio */
-  margin-top: 0;
-  font-size: 1.3rem;
-}
-
-.modal-content h4 {
-  color: #222222; /* Encabezados de salsas y aderezos */
-  margin: 12px 0 6px 0;
-  font-size: 1rem;
-}
-
-.checkbox-label, 
-.radio-label {
-  color: #333333 !important; /* Texto de cada salsa/aderezo */
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.close-btn {
-  color: #888888;
-}
-
-.close-btn:hover {
-  color: #000000;
 }
